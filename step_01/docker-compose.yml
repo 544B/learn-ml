@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  learn-ml:
+    image: tensorflow/tensorflow
+    tty: true
+    entrypoint: >
+      python -c "import tensorflow as tf; print(tf.reduce_sum(tf.random.normal([1000, 1000])));"
