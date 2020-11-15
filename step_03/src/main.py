@@ -2,6 +2,11 @@ import tensorflow as tf
 from tensorflow import keras
 
 import numpy as np
+import matplotlib.pyplot as plt
+
+import os
+
+OUTPUT_DIR = '/output'
 
 
 imdb = keras.datasets.imdb
@@ -43,6 +48,28 @@ def get_model(vocab_size=10000):
     return model
 
 
+def gen_training_loss_graph(epochs, loss, val_loss):
+    plt.plot(epochs, loss, 'bo', label='Training loss')
+    plt.plot(epochs, val_loss, 'b', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.savefig(os.path.join(OUTPUT_DIR, 'training_loss.png'))
+    plt.clf()
+
+
+def gen_training_acc_graph(epochs, acc, val_acc):
+    plt.plot(epochs, acc, 'bo', label='Training acc')
+    plt.plot(epochs, val_acc, 'b', label='Validation acc')
+    plt.title('Training and validation accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.savefig(os.path.join(OUTPUT_DIR, 'training_acc.png'))
+    plt.clf()
+
+
 def main():
     (train_data, train_labels), (test_data, test_labels) = imdb.load_data(num_words=10000)
 
@@ -63,12 +90,10 @@ def main():
     model = get_model(vocab_size)
     model.summary()
 
-
     x_val = train_data[:vocab_size]
     partial_x_train = train_data[vocab_size:]
     y_val = train_labels[:vocab_size]
     partial_y_train = train_labels[vocab_size:]
-
 
     history = model.fit(partial_x_train,
             partial_y_train,
@@ -78,6 +103,16 @@ def main():
             verbose=1)
     results = model.evaluate(test_data, test_labels, verbose=2)
     print(results)
+
+    history = history.history
+    acc = history['accuracy']
+    val_acc = history['val_accuracy']
+    loss = history['loss']
+    val_loss = history['val_loss']
+    epochs = range(1, len(acc) + 1)
+
+    gen_training_loss_graph(epochs, loss, val_loss)
+    gen_training_acc_graph(epochs, acc, val_acc)
 
 
 if __name__ == '__main__':
