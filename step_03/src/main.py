@@ -26,6 +26,14 @@ def setup_data(data):
             padding='post',
             maxlen=256)
 
+def get_model(vocab_size=1000):
+    model = keras.Sequential()
+    model.add(keras.layers.Embedding(vocab_size, 16))
+    model.add(keras.layers.GlobalAveragePooling1D())
+    model.add(keras.layers.Dense(16, activation='relu'))
+    model.add(keras.layers.Dense(1, activation='sigmoid'))
+    return model
+
 def main():
     (train_data, train_labels), (test_data, test_labels) = imdb.load_data(num_words=10000)
 
@@ -41,6 +49,9 @@ def main():
     test_data = setup_data(test_data)
     print('After: {},{}'.format(len(train_data[0]), len(train_data[1])))
     print('after-decode: {}'.format(decode_review(train_data[0])))
+
+    model = get_model()
+    model.summary()
 
 
 if __name__ == '__main__':
