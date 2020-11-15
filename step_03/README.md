@@ -6,6 +6,7 @@ STEP.03: Basic text classification
 
 
 ## Notes
+- IMDB: 俳優、映画、テレビ番組、テレビ・スターおよびビデオゲームに関する情報のオンラインデータベース
 
 
 ## Run
