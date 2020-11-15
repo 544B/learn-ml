@@ -23,10 +23,23 @@ def multi_hot_sequences(sequences, dimension):
 train_data = multi_hot_sequences(train_data, dimension=NUM_WORDS)
 test_data = multi_hot_sequences(test_data, dimension=NUM_WORDS)
 
-def main():
-    plt.plot(train_data[0])
-    plt.savefig(os.path.join(OUTPUT_DIR, 'check.png'))
+plt.plot(train_data[0])
+plt.savefig(os.path.join(OUTPUT_DIR, 'check.png'))
 
+
+def main():
+    baseline_model = keras.Sequential([
+        # `.summary` を見るために`input_shape`が必要 
+        keras.layers.Dense(16, activation='relu', input_shape=(NUM_WORDS,)),
+        keras.layers.Dense(16, activation='relu'),
+        keras.layers.Dense(1, activation='sigmoid')
+    ])
+
+    baseline_model.compile(optimizer='adam',
+                        loss='binary_crossentropy',
+                        metrics=['accuracy', 'binary_crossentropy'])
+
+    baseline_model.summary()
 
 
 if __name__ == '__main__':
