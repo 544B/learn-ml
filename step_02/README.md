@@ -1,4 +1,4 @@
-STEP.02: Classify images of clothing
+STEP.02: Basic image classification
 ===
 
 ## Documents
