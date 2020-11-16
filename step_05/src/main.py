@@ -44,6 +44,17 @@ def main():
             validation_data=(test_images,test_labels),
             callbacks=[cp_callback])
 
+    loss, acc = model.evaluate(test_images,  test_labels, verbose=2)
+    print("trained model, accuracy: {:5.2f}%".format(100*acc))
+
+    model = create_model()
+    loss, acc = model.evaluate(test_images,  test_labels, verbose=2)
+    print("Untrained model, accuracy: {:5.2f}%".format(100*acc))
+
+    model.load_weights(checkpoint_path)
+    loss,acc = model.evaluate(test_images,  test_labels, verbose=2)
+    print("Restored model, accuracy: {:5.2f}%".format(100*acc))
+
 
 if __name__ == '__main__':
     main()
