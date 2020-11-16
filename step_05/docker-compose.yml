@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  learn-ml:
+    image: tensorflow/tensorflow
+    volumes:
+      - "./src:/app"
+    working_dir: "/app"
+    tty: true
+    command: >
+        /bin/sh -c "python -u main.py;"
