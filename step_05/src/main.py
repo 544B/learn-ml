@@ -3,6 +3,8 @@ from tensorflow import keras
 
 import os
 
+OUTPUT_DIR = '/output'
+
 (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
 
 train_labels = train_labels[:1000]
@@ -29,6 +31,18 @@ def main():
     model = create_model()
     model.summary()
 
+    checkpoint_path = os.path.join(OUTPUT_DIR, 'training_1/cp.ckpt')
+    checkpoint_dir = os.path.dirname(checkpoint_path)
+
+    cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path,
+            save_weights_only=True,
+            verbose=1)
+
+    model.fit(train_images, 
+            train_labels,  
+            epochs=10,
+            validation_data=(test_images,test_labels),
+            callbacks=[cp_callback])
 
 
 if __name__ == '__main__':

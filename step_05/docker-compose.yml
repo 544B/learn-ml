@@ -5,6 +5,7 @@ services:
     image: tensorflow/tensorflow
     volumes:
       - "./src:/app"
+      - "./output:/output"
       - "./requirements.txt:/tmp/requirements.txt"
     working_dir: "/app"
     tty: true
