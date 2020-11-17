@@ -5,7 +5,7 @@ import os
 
 OUTPUT_DIR = '/output'
 
-(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
+(train_images, train_labels), (test_images, test_labels) = keras.datasets.mnist.load_data()
 
 train_labels = train_labels[:1000]
 test_labels = test_labels[:1000]
@@ -32,7 +32,7 @@ def main():
     model.summary()
 
     checkpoint_path = os.path.join(OUTPUT_DIR, 'training_1/cp.ckpt')
-    checkpoint_dir = os.path.dirname(checkpoint_path)
+    save_path = os.path.join(OUTPUT_DIR, 'model.h5')
 
     cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path,
             save_weights_only=True,
@@ -41,11 +41,13 @@ def main():
     model.fit(train_images, 
             train_labels,  
             epochs=10,
-            validation_data=(test_images,test_labels),
+            validation_data=(test_images, test_labels),
             callbacks=[cp_callback])
+    model.summary()
 
     loss, acc = model.evaluate(test_images,  test_labels, verbose=2)
     print("trained model, accuracy: {:5.2f}%".format(100*acc))
+
 
     model = create_model()
     loss, acc = model.evaluate(test_images,  test_labels, verbose=2)
@@ -54,6 +56,15 @@ def main():
     model.load_weights(checkpoint_path)
     loss,acc = model.evaluate(test_images,  test_labels, verbose=2)
     print("Restored model, accuracy: {:5.2f}%".format(100*acc))
+
+    model = create_model()
+    model.fit(train_images, train_labels, epochs=5)
+    model.save(save_path)
+
+    new_model = tf.keras.models.load_model(save_path)
+    new_model.summary()
+    loss, acc = new_model.evaluate(test_images,  test_labels, verbose=2)
+    print("h5 model, accuracy: {:5.2f}%".format(100*acc))
 
 
 if __name__ == '__main__':
